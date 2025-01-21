@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Exercise Tracker</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script defer src="app.js"></script>
+  </head>
+  <body>
+    <div class="app-container">
+      <header class="app-header">
+        <div class="logo">運動記録表</div>
+        <div class="user-info">
+          <span id="totalExerciseTime">総運動時間: 0分</span>
+          <span id="totalCalories">総消費カロリー: 0kcal</span>
+        </div>
+      </header>
+
+      <div class="main-content">
+        <div class="exercise-form-container">
+          <h2>運動を記録する</h2>
+          <form id="exerciseForm" class="exercise-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="exerciseDate">日付</label>
+                <div class="date-input-container">
+                  <button type="button" id="prevDayBtn" class="date-nav-btn">
+                    ◀
+                  </button>
+                  <input type="date" id="exerciseDate" required />
+                  <button type="button" id="nextDayBtn" class="date-nav-btn">
+                    ▶
+                  </button>
+                  <button type="button" id="setTodayBtn" class="today-btn">
+                    本日
+                  </button>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="exerciseType">運動種目</label>
+                <select id="exerciseType" required>
+                  <option value="">選択してください</option>
+                  <option value="walking" data-mets="3.5">ウォーキング</option>
+                  <option value="running" data-mets="8.0">ランニング</option>
+                  <option value="cycling" data-mets="7.0">サイクリング</option>
+                  <option value="swimming" data-mets="6.0">水泳</option>
+                  <option value="training" data-mets="5.0">筋トレ</option>
+                </select>
+                <button type="button" id="addExerciseBtn" class="add-btn">
+                  追加
+                </button>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="exerciseDuration">運動時間（分）</label>
+                <input type="number" id="exerciseDuration" min="1" required />
+              </div>
+              <div class="form-group">
+                <label for="exerciseIntensity"
+                  >運動強度（METs）
+                  <span id="metsInfo" class="info-icon">❓</span>
+                </label>
+                <input
+                  type="number"
+                  id="exerciseIntensity"
+                  step="0.1"
+                  min="1"
+                  max="20"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="height">身長（cm）</label>
+                <input type="number" id="height" step="0.1" min="1" required />
+              </div>
+              <div class="form-group">
+                <label for="weight">体重（kg）</label>
+                <input type="number" id="weight" step="0.1" min="1" required />
+              </div>
+              <div class="form-group">
+                <label for="memo">メモ</label>
+                <input type="text" id="memo" />
+              </div>
+            </div>
+
+            <button type="submit" class="submit-btn">記録する</button>
+          </form>
+        </div>
+
+        <div class="data-visualization">
+          <div class="chart-container">
+            <h3>最新7日間の運動記録</h3>
+            <canvas id="weeklyChart"></canvas>
+            <div class="chart-controls">
+              <label>
+                <input type="checkbox" id="toggleWeeklyCalories" checked />
+                消費カロリー
+              </label>
+              <label>
+                <input type="checkbox" id="toggleWeeklyWeight" checked />
+                体重
+              </label>
+              <label>
+                <input type="checkbox" id="toggleWeeklyDuration" checked />
+                運動時間
+              </label>
+            </div>
+          </div>
+          <div class="chart-container">
+            <h3>月間運動記録</h3>
+            <canvas id="monthlyChart"></canvas>
+            <div class="chart-controls">
+              <label>
+                <input type="checkbox" id="toggleCalories" checked />
+                消費カロリー
+              </label>
+              <label>
+                <input type="checkbox" id="toggleWeight" checked />
+                体重
+              </label>
+              <label>
+                <input type="checkbox" id="toggleDuration" checked />
+                運動時間
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="exercise-history">
+          <h3>運動履歴</h3>
+          <div class="history-list" id="exerciseHistory"></div>
+          <button id="undoDeleteBtn" style="display: none">
+            削除を取り消す
+          </button>
+        </div>
+
+        <div class="goal-setting">
+          <h3>目標設定</h3>
+          <div class="form-group">
+            <label for="goalType">目標タイプ</label>
+            <select id="goalType">
+              <option value="time">運動時間（分）</option>
+              <option value="calories">消費カロリー（kcal）</option>
+              <option value="days">運動日数</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="goalValue">目標値</label>
+            <input type="number" id="goalValue" min="1" />
+          </div>
+          <div class="form-group">
+            <label for="goalStartDate">目標開始日</label>
+            <input type="date" id="goalStartDate" />
+          </div>
+          <button type="button" id="setGoalBtn" class="submit-btn">
+            目標を設定
+          </button>
+        </div>
+
+        <div class="goal-progress">
+          <h3>達成率</h3>
+          <div class="progress-bar">
+            <div class="progress" id="progress"></div>
+          </div>
+          <span id="progressPercentage">0%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- モーダルウィンドウ -->
+    <div id="metsModal" class="modal">
+      <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <h2>メッツ（METs）について</h2>
+        <p>メッツ（METs）は、運動の強さを分かりやすく表現した単位です。</p>
+        <h3>基本的な考え方</h3>
+        <p>
+          座って安静にしている状態を「1メッツ」として、その何倍のエネルギーを消費するかを表します。例えば、3メッツの運動は、安静時の3倍のエネルギーを消費する活動という意味です。
+        </p>
+        <h3>日常生活での具体例</h3>
+        <ul>
+          <li>座って安静：1メッツ</li>
+          <li>立っている：2メッツ</li>
+          <li>普通の歩行：3メッツ</li>
+          <li>やや速歩：4メッツ</li>
+          <li>かなり速歩：5メッツ</li>
+          <li>ジョギング：6メッツ</li>
+          <li>ランニング：8メッツ</li>
+          <li>階段を駆け上がる：10メッツ</li>
+        </ul>
+        <h3>消費カロリーの計算方法</h3>
+        <p>消費カロリー（kcal）＝ メッツ × 運動時間（時間）× 体重（kg）</p>
+        <p>
+          具体例として、体重60kgの人が1時間散歩（3メッツ）をした場合、以下のように計算できます。
+        </p>
+        <p>3メッツ × 1時間 × 60kg ＝ 180kcal</p>
+        <h3>健康づくりのポイント</h3>
+        <p>
+          厚生労働省は、健康維持のために1週間に23メッツ・時以上の運動を推奨しています。これは、例えば毎日1時間の散歩（3メッツ）を行うことで達成できる目安となります。
+        </p>
+        <p>
+          メッツを意識することで、自分の運動強度を客観的に把握でき、効果的な運動計画を立てることができます。また、運動の種類による強度の違いを理解することで、自分の体力や目的に合わせた運動を選択することができます。
+        </p>
+      </div>
+    </div>
+
+    <!-- 新しい運動を追加するモーダルウィンドウ -->
+    <div id="addExerciseModal" class="modal">
+      <div class="modal-content">
+        <span class="close-add-btn">&times;</span>
+        <h2>新しい運動を追加</h2>
+        <div class="form-group">
+          <label for="newExerciseName">運動名</label>
+          <input type="text" id="newExerciseName" required />
+        </div>
+        <div class="form-group">
+          <label for="newExerciseMets">運動強度（METs）</label>
+          <input
+            type="number"
+            id="newExerciseMets"
+            step="0.1"
+            min="1"
+            required
+          />
+        </div>
+        <button type="button" id="saveExerciseBtn" class="submit-btn">
+          保存
+        </button>
+      </div>
+    </div>
+  </body>
+</html>
