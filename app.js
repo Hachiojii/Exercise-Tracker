@@ -22,6 +22,7 @@ class ExerciseTracker {
     this.loadGoal();
     this.updateProgress();
     this.setupUndoButton(); // 削除取り消しボタンのセットアップ
+    this.setupGoalDateButtons(); // 目標開始日のボタンセットアップ
   }
 
   setupUndoButton() {
@@ -29,6 +30,25 @@ class ExerciseTracker {
     if (undoButton) {
       undoButton.addEventListener("click", () => this.undoDelete());
     }
+  }
+
+  setupGoalDateButtons() {
+    const goalStartDateInput = document.getElementById("goalStartDate");
+    const setGoalTodayBtn = document.getElementById("setGoalTodayBtn");
+    const goalDatePrevBtn = document.getElementById("goalDatePrevBtn");
+    const goalDateNextBtn = document.getElementById("goalDateNextBtn");
+
+    setGoalTodayBtn.addEventListener("click", () => {
+      this.setGoalDateToToday();
+    });
+
+    goalDatePrevBtn.addEventListener("click", () => {
+      this.changeGoalDateByDays(-1);
+    });
+
+    goalDateNextBtn.addEventListener("click", () => {
+      this.changeGoalDateByDays(1);
+    });
   }
 
   loadExercises() {
@@ -585,6 +605,18 @@ class ExerciseTracker {
       document.getElementById("goalValue").value = this.goal.value;
       document.getElementById("goalStartDate").value = this.goal.startDate;
     }
+  }
+
+  setGoalDateToToday() {
+    const today = new Date().toISOString().split("T")[0];
+    document.getElementById("goalStartDate").value = today;
+  }
+
+  changeGoalDateByDays(days) {
+    const dateInput = document.getElementById("goalStartDate");
+    const currentDate = new Date(dateInput.value);
+    currentDate.setDate(currentDate.getDate() + days);
+    dateInput.value = currentDate.toISOString().split("T")[0];
   }
 }
 
