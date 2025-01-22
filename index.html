@@ -143,25 +143,40 @@
 
         <div class="goal-setting">
           <h3>目標設定</h3>
-          <div class="form-group">
-            <label for="goalType">目標タイプ</label>
-            <select id="goalType">
-              <option value="time">運動時間（分）</option>
-              <option value="calories">消費カロリー（kcal）</option>
-              <option value="days">運動日数</option>
-            </select>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="goalType">目標タイプ</label>
+              <select id="goalType">
+                <option value="time">運動時間（分）</option>
+                <option value="calories">消費カロリー（kcal）</option>
+                <option value="days">運動日数</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="goalValue">目標値</label>
+              <input type="number" id="goalValue" min="1" />
+            </div>
           </div>
-          <div class="form-group">
-            <label for="goalValue">目標値</label>
-            <input type="number" id="goalValue" min="1" />
+          <div class="form-row">
+            <div class="form-group">
+              <label for="goalStartDate">目標開始日:</label>
+              <div class="date-input-container">
+                <button type="button" id="goalDatePrevBtn" class="date-nav-btn">
+                  ◀
+                </button>
+                <input type="date" id="goalStartDate" required />
+                <button type="button" id="goalDateNextBtn" class="date-nav-btn">
+                  ▶
+                </button>
+                <button type="button" id="setGoalTodayBtn" class="today-btn">
+                  本日
+                </button>
+              </div>
+            </div>
+            <button type="button" id="setGoalBtn" class="submit-btn">
+              目標を設定
+            </button>
           </div>
-          <div class="form-group">
-            <label for="goalStartDate">目標開始日</label>
-            <input type="date" id="goalStartDate" />
-          </div>
-          <button type="button" id="setGoalBtn" class="submit-btn">
-            目標を設定
-          </button>
         </div>
 
         <div class="goal-progress">
