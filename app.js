@@ -78,6 +78,7 @@ class ExerciseTracker {
       duration: Number(document.getElementById("exerciseDuration").value),
       intensity: Number(document.getElementById("exerciseIntensity").value),
       weight: weight,
+      height: height,
       memo: document.getElementById("memo").value,
       calories: this.calculateCalories(
         Number(document.getElementById("exerciseDuration").value),
